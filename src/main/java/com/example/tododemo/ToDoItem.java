@@ -35,7 +35,7 @@ public class ToDoItem {
         return this;
     }
 
-    public ToDoItem patch(ToDoItemInput patch) {
+    public ToDoItem partialUpdate(ToDoItemInput patch) {
         if (patch.getDescription() != null) {
             setDescription(patch.getDescription());
         }

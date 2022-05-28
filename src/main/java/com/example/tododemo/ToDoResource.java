@@ -46,7 +46,7 @@ public class ToDoResource {
         if (existingToDo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        ToDoItem updatedToDo = existingToDo.get().patch(update);
+        ToDoItem updatedToDo = existingToDo.get().partialUpdate(update);
         ToDoItem persistedToDo = repo.save(updatedToDo);
         return new ResponseEntity<>(persistedToDo, HttpStatus.OK);
 
