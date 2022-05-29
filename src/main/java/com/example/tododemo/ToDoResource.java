@@ -16,20 +16,26 @@ public class ToDoResource {
     private ToDoItemRepo repo;
 
     @GetMapping
-    public ResponseEntity<?> getAllToDos() {
+    public ResponseEntity<List<ToDoItem>> getAllToDos() {
         List<ToDoItem> toDos = repo.findAll();
         return new ResponseEntity<>(toDos, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<ToDoItem>> getOneToDo(@PathVariable String id) {
+        Optional<ToDoItem> toDo = repo.findById(id);
+        return new ResponseEntity<>(toDo, HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<?> createToDo(@RequestBody ToDoItemInput newToDo) {
+    public ResponseEntity<ToDoItem> createToDo(@RequestBody ToDoItemInput newToDo) {
         ToDoItem toDoToSave = new ToDoItem(newToDo);
         ToDoItem persistedToDo = repo.save(toDoToSave);
         return new ResponseEntity<>(persistedToDo, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateToDo(@RequestBody ToDoItemInput update, @PathVariable String id) {
+    public ResponseEntity<ToDoItem> updateToDo(@RequestBody ToDoItemInput update, @PathVariable String id) {
         Optional<ToDoItem> existingToDo = repo.findById(id);
         if (existingToDo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -41,7 +47,7 @@ public class ToDoResource {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> patchToDo(@RequestBody ToDoItemInput update, @PathVariable String id) {
+    public ResponseEntity<ToDoItem> patchToDo(@RequestBody ToDoItemInput update, @PathVariable String id) {
         Optional<ToDoItem> existingToDo = repo.findById(id);
         if (existingToDo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -53,7 +59,7 @@ public class ToDoResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteToDo(@PathVariable String id) {
+    public ResponseEntity<HttpStatus> deleteToDo(@PathVariable String id) {
         try {
             repo.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
